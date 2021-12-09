@@ -174,6 +174,7 @@ class HiveMindRemi(remi.App):
         if self.bus and self.bus.connected_event.is_set():
             print(f"Connected to HiveMind! {'wss' if self.bus.ssl else 'ws'}://{self.bus.host}:{self.bus.port}")
             self.status.set_text("Connected to HiveMind!")
+            self.clear_chat()
             self.speak("Connected to HiveMind!")
             self.bus.on_mycroft("speak", self.handle_speak)
         else:
