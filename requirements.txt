@@ -1,2 +1,2 @@
 remi
-hivemind_bus_client~=0.0.3a2
+hivemind_bus_client~=0.4.4

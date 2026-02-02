@@ -5,7 +5,7 @@ setup(
     version='0.0.1',
     packages=['hivemind_remi'],
     include_package_data=True,
-    install_requires=["remi", "hivemind_bus_client~=0.0.3a2"],
+    install_requires=["remi", "hivemind_bus_client~=0.4.4"],
     url='https://github.com/JarbasHiveMind/HiveMind-remi',
     license='MIT',
     author='jarbasAI',
