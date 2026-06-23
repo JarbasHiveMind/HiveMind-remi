@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hivemind-remi"
+description = "REMI web GUI client for HiveMind — chat with a HiveMind hub from the browser"
+readme = "readme.md"
+authors = [{ name = "jarbasAI", email = "jarbasai@mailfence.com" }]
+license = { text = "MIT" }
+# Capped below 3.13: the upstream `remi` GUI library (last released 2022)
+# still does `import cgi`, which was removed from the stdlib in Python 3.13.
+# There is no maintained release that works on 3.13, so this client cannot run
+# there until/unless remi is replaced.
+requires-python = ">=3.10,<3.13"
+dynamic = ["version", "dependencies"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Homepage = "https://github.com/JarbasHiveMind/HiveMind-remi"
+
+[project.scripts]
+HiveMind-remi = "hivemind_remi.__main__:main"
+
+[tool.setuptools]
+packages = ["hivemind_remi"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "hivemind_remi.version.__version__" }
+dependencies = { file = ["requirements.txt"] }
