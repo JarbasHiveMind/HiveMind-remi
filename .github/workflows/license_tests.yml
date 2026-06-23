@@ -8,3 +8,8 @@ on:
 jobs:
   license_check:
     uses: OpenVoiceOS/gh-automations/.github/workflows/license-check.yml@dev
+    with:
+      # remi caps requires-python <3.13 (upstream remi imports the removed
+      # stdlib `cgi`), so the license job's default 3.14 interpreter cannot
+      # install the package — pin it to a supported version.
+      python_version: '3.12'
