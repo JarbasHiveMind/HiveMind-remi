@@ -8,7 +8,11 @@ description = "REMI web GUI client for HiveMind — chat with a HiveMind hub fro
 readme = "readme.md"
 authors = [{ name = "jarbasAI", email = "jarbasai@mailfence.com" }]
 license = { text = "MIT" }
-requires-python = ">=3.10"
+# Capped below 3.13: the upstream `remi` GUI library (last released 2022)
+# still does `import cgi`, which was removed from the stdlib in Python 3.13.
+# There is no maintained release that works on 3.13, so this client cannot run
+# there until/unless remi is replaced.
+requires-python = ">=3.10,<3.13"
 dynamic = ["version", "dependencies"]
 
 [project.optional-dependencies]

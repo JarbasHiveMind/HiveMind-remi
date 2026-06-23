@@ -9,5 +9,6 @@ jobs:
   build:
     uses: OpenVoiceOS/gh-automations/.github/workflows/build-tests.yml@dev
     with:
-      python_versions: '["3.10", "3.11", "3.12", "3.13"]'
+      # 3.13 excluded: upstream `remi` imports the removed-in-3.13 stdlib `cgi`.
+      python_versions: '["3.10", "3.11", "3.12"]'
       test_path: 'tests/'
