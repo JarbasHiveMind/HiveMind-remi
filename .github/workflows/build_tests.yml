@@ -11,4 +11,10 @@ jobs:
     with:
       # 3.13 excluded: upstream `remi` imports the removed-in-3.13 stdlib `cgi`.
       python_versions: '["3.10", "3.11", "3.12"]'
-      test_path: 'tests/'
+      # Network-free smoke tests across the full matrix. The HiveMind-side e2e
+      # (tests/e2e/) boots a real hivemind-core server via hivescope and runs in
+      # a dedicated job (e2e_tests.yml) so it doesn't drag the whole alpha stack
+      # into every matrix cell. Version policy lives in pyproject (the `test`
+      # extra); no pre_install pins — prerelease deps are pinned as minimums.
+      install_extras: 'test'
+      test_path: 'tests/test_smoke.py'
