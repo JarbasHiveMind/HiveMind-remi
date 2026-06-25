@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0a1](https://github.com/JarbasHiveMind/HiveMind-remi/tree/1.0.0a1) (2026-06-25)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-remi/compare/0.1.0a2...1.0.0a1)
+
+**Breaking changes:**
+
+- feat!: consolidate deps to pyproject, wire full CI, docs + HiveMind e2e [\#13](https://github.com/JarbasHiveMind/HiveMind-remi/pull/13) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.1.0a2](https://github.com/JarbasHiveMind/HiveMind-remi/tree/0.1.0a2) (2026-06-23)
 
 [Full Changelog](https://github.com/JarbasHiveMind/HiveMind-remi/compare/10d815486e9eeb42f834f655cbd7cfa5aba4636b...0.1.0a2)
