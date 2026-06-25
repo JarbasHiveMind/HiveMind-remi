@@ -12,6 +12,8 @@ class TestPackage(unittest.TestCase):
         import hivemind_remi
         from hivemind_remi.version import __version__
 
+        # the package imports cleanly and exposes the app class
+        self.assertTrue(hasattr(hivemind_remi, "HiveMindRemi"))
         self.assertIsInstance(__version__, str)
         # e.g. "0.1.0" or "0.1.0a1"
         self.assertRegex(__version__, r"^\d+\.\d+\.\d+(a\d+)?$")

@@ -1,6 +1,0 @@
-hivemind-bus-client>=0.9.0,<1.0.0
-remi
-ovos-utils
-# remi 2022.7.27 imports pkg_resources at runtime without declaring setuptools;
-# pkg_resources was removed in setuptools>=81, so cap it until remi is updated.
-setuptools<81
