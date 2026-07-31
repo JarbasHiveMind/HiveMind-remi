@@ -3,20 +3,20 @@
 A small web GUI for testing connections to a
 [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) server. It is
 built with the [Remi](https://github.com/rawpython/remi) framework, so the
-interface is a local web page driven entirely by Python: fill in your server
+interface is a local web page driven entirely by Python. Fill in your server
 credentials, connect, and chat with your assistant from the browser.
 
 ![demo](./remi.gif)
 
 ## Where it sits
 
-HiveMind is a mesh: satellite devices connect to a central
+HiveMind is a mesh. Satellite devices connect to a central
 [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) server over an
-authenticated, encrypted protocol. Remi is a throwaway **test satellite** — it
+authenticated, encrypted protocol. Remi is a throwaway **test satellite**. It
 wraps the Python
 [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client)
-in a GUI so you can verify a server and access key work, and watch utterances
-and spoken replies flow, without writing any code.
+in a GUI so you can check that a server and access key work, and watch
+utterances and spoken replies flow, without writing any code.
 
 ```
 Remi web GUI (hivemind-bus-client)  ──encrypted──►  hivemind-core  ──►  OVOS / agent
@@ -37,9 +37,9 @@ pip install .
 ```
 
 Runtime dependencies (`remi`, `hivemind-bus-client`, `ovos-bus-client`,
-`ovos-utils`) are declared in `pyproject.toml` — it is the single source of
-truth for packaging. See [docs/dependencies.md](./docs/dependencies.md) for the
-version policy.
+`ovos-utils`) are declared in `pyproject.toml`, the single source of truth for
+packaging. See [docs/dependencies.md](./docs/dependencies.md) for the version
+policy.
 
 ## Quickstart
 
@@ -83,12 +83,13 @@ responses appear in the chat log.
 Full docs live in [`docs/`](./docs):
 
 - [Installation](./docs/installation.md)
-- [Configuration](./docs/configuration.md) — the Connect-tab fields explained
-- [Architecture](./docs/architecture.md) — the remi web-GUI design and how it
+- [Configuration](./docs/configuration.md): the Connect-tab fields explained
+- [Architecture](./docs/architecture.md): the remi web-GUI design and how it
   talks to hivemind-core
-- [Dependencies](./docs/dependencies.md) — version policy and the 2.x stack
-- [Running tests](./docs/testing.md) — smoke + HiveMind-side end-to-end suite
+- [Dependencies](./docs/dependencies.md): version policy and the 2.x stack
+- [Running tests](./docs/testing.md): the smoke suite and the HiveMind-side
+  end-to-end suite
 
 ## License
 
-Apache 2.0 — see [LICENSE](./LICENSE).
+Apache 2.0. See [LICENSE](./LICENSE).

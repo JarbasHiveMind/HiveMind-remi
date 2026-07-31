@@ -7,7 +7,7 @@ how the client connects to hivemind-core.
 ## The remi web-GUI model
 
 Remi is a Python GUI library that renders its widget tree as a **local web
-page** and drives it over a websocket to the browser — the developer writes only
+page** and drives it over a websocket to the browser. The developer writes only
 Python, no HTML/JS. `remi.start(HiveMindRemi, standalone=True)` (in
 `hivemind_remi/__main__.py`) starts that local HTTP/websocket server and opens
 the page in the default browser.
@@ -38,7 +38,7 @@ and referenced as `/pics:<file>`.
 
 The GUI is a thin shell over a real
 [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client)
-`HiveMessageBusClient`. There is no intermediate process — the remi app **is**
+`HiveMessageBusClient`. There is no intermediate process. The remi app **is**
 the satellite.
 
 ```
@@ -50,35 +50,38 @@ the satellite.
   └───────────────┘
 ```
 
-### Outbound — sending a message
+### Outbound: sending a message
 
-`say(utterance)` clears the chat, renders the user bubble, and — if connected —
+`say(utterance)` clears the chat, renders the user bubble, and, if connected,
 emits a `recognizer_loop:utterance` `Message` on the bus carrying
 `{"utterances": [utterance], "lang": <Language field>}`. hivemind-core decrypts
 it, stamps a `source` identifying this peer, and injects it onto the assistant's
 agent bus. If not connected, `say` instead renders *"I am not connected to the
 HiveMind!"* and emits nothing.
 
-### Inbound — receiving a reply
+### Inbound: receiving a reply
 
 On a successful connect the app subscribes with
 `bus.on_mycroft("speak", self.handle_speak)`. When the agent emits a `speak`
 destined for this peer, hivemind-core routes it back over the encrypted
-WebSocket; `handle_speak` extracts `message.data["utterance"]` and `speak()`
+WebSocket. `handle_speak` extracts `message.data["utterance"]` and `speak()`
 renders a bot bubble into the chat view.
 
 ### Connection lifecycle
 
-`connect()` always builds a **fresh** client: the 0.9.x `HiveMessageBusClient`
+`connect()` always builds a **fresh** client. The 0.9.x `HiveMessageBusClient`
 is `NodeIdentity`-backed and derives `ssl` from the host scheme, so a previous
 client is closed and discarded rather than reconfigured. `bus.connect()` runs
-the socket loop in a background thread and blocks on the HiveMind handshake; the
-`connected` property is true only once **both** `connected_event` and
+the socket loop in a background thread and blocks on the HiveMind handshake.
+The `connected` property is true only once **both** `connected_event` and
 `handshake_event` are set.
 
 ## Why it is "throwaway"
 
-There is no persistence, no audio, no wake word — just a form and a chat log.
-Its job is to confirm that a server address + access key work and to watch
-utterances and replies flow, which makes it useful for validating a hivemind-core
-deployment before wiring up a real satellite.
+There is no persistence, no audio, and no wake word, just a form and a chat
+log. Its job is to confirm that a server address and access key work and to
+watch utterances and replies flow, which makes it useful for validating a
+hivemind-core deployment before wiring up a real satellite.
+
+---
+[← Configuration](configuration.md) · [Home](index.md) · [Dependencies →](dependencies.md)
