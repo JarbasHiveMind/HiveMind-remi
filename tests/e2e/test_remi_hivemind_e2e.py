@@ -120,7 +120,7 @@ def _server_with_client(allowed_types):
     """Boot a real loopback hivemind-core server and pre-register one key."""
     b = TopologyBuilder()
     m = b.add_master("M0", use_loopback=True)
-    m.register_satellite("remi-key", password="remi-pass",
+    m.register_satellite("remi-key", password="remi-correct-horse-battery-staple",
                          allowed_types=allowed_types)
     b.start_all()
     return b, m
@@ -147,7 +147,7 @@ def test_connect_opens_real_bus_and_completes_handshake():
     app = _make_app()
     try:
         host, port = _host_port(m.network_protocol.url)
-        app.connect(access_key="remi-key", password="remi-pass",
+        app.connect(access_key="remi-key", password="remi-correct-horse-battery-staple",
                     host=host, port=port)
 
         deadline = time.time() + 15
@@ -176,7 +176,7 @@ def test_say_emits_utterance_to_real_server_agent():
     app = _make_app()
     try:
         host, port = _host_port(m.network_protocol.url)
-        app.connect(access_key="remi-key", password="remi-pass",
+        app.connect(access_key="remi-key", password="remi-correct-horse-battery-staple",
                     host=host, port=port)
         deadline = time.time() + 15
         while time.time() < deadline and not app.connected:
@@ -237,7 +237,7 @@ def test_server_speak_reaches_client_and_renders_to_chat():
     app = _make_app()
     try:
         host, port = _host_port(m.network_protocol.url)
-        app.connect(access_key="remi-key", password="remi-pass",
+        app.connect(access_key="remi-key", password="remi-correct-horse-battery-staple",
                     host=host, port=port)
         deadline = time.time() + 15
         while time.time() < deadline and not app.connected:
