@@ -9,6 +9,16 @@ jobs:
   pip_audit:
     uses: OpenVoiceOS/gh-automations/.github/workflows/pip-audit.yml@dev
     with:
+      # T-2377: ids the audit reports at dev with no floor that can fix them.
+      # Review the list when the dependency moves.
+      # PYSEC-2026-3447: setuptools 80.10.2, fixed in 83.0.0. The own cap
+      #   setuptools<81 holds it, because remi 2022.7.27 (latest release)
+      #   imports pkg_resources.
+      # The first id is the shared default. A caller value replaces the
+      # default, so it is repeated here.
+      ignore_vulns: |
+        GHSA-r9hx-vwmv-q579
+        PYSEC-2026-3447
       # remi caps requires-python <3.13, so the audit job's default 3.14
       # interpreter cannot install the package — pin to a supported version.
       python_version: '3.12'
