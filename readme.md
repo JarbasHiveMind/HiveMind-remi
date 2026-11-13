@@ -1,23 +1,25 @@
 # HiveMind Remi
 
-A small desktop GUI for testing connections to a [HiveMind](https://github.com/JarbasHiveMind/HiveMind-core)
-hub. It is built with the [Remi](https://github.com/rawpython/remi) framework,
-so the interface is a local web page driven by Python: fill in your hub
-credentials, connect, and chat with your assistant.
+A small web GUI for testing connections to a
+[hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) server. It is
+built with the [Remi](https://github.com/rawpython/remi) framework, so the
+interface is a local web page driven entirely by Python. Fill in your server
+credentials, connect, and chat with your assistant from the browser.
 
 ![demo](./remi.gif)
 
 ## Where it sits
 
-HiveMind is a mesh: satellite devices connect to a central
-[hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) hub over an
-authenticated, encrypted protocol. Remi is a throwaway **test satellite** — it
-wraps the Python [hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client)
-in a GUI so you can verify a hub and access key work, and watch utterances and
-spoken replies flow, without writing any code.
+HiveMind is a mesh. Satellite devices connect to a central
+[hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core) server over an
+authenticated, encrypted protocol. Remi is a throwaway **test satellite**. It
+wraps the Python
+[hivemind-bus-client](https://github.com/JarbasHiveMind/hivemind-websocket-client)
+in a GUI so you can check that a server and access key work, and watch
+utterances and spoken replies flow, without writing any code.
 
 ```
-Remi GUI (hivemind-bus-client)  ──encrypted──►  hivemind-core hub  ──►  OVOS / agent
+Remi web GUI (hivemind-bus-client)  ──encrypted──►  hivemind-core  ──►  OVOS / agent
 ```
 
 ## Install
@@ -34,11 +36,14 @@ cd HiveMind-remi
 pip install .
 ```
 
-Dependencies: `remi`, `hivemind-bus-client`.
+Runtime dependencies (`remi`, `hivemind-bus-client`, `ovos-bus-client`,
+`ovos-utils`) are declared in `pyproject.toml`, the single source of truth for
+packaging. See [docs/dependencies.md](./docs/dependencies.md) for the version
+policy.
 
 ## Quickstart
 
-### 1. Run a hub and issue an access key
+### 1. Run a server and issue an access key
 
 On the machine hosting the assistant, install and run
 [hivemind-core](https://github.com/JarbasHiveMind/HiveMind-core):
@@ -62,32 +67,29 @@ On the **Connect** tab, fill in:
 
 | Field | Value |
 |-------|-------|
-| Host | the hub address, e.g. `ws://127.0.0.1` (use `wss://` for TLS) |
-| Port | the hub's HiveMind port (default `5678`) |
+| Host | the server address, e.g. `ws://127.0.0.1` (use `wss://` for TLS) |
+| Port | the server's HiveMind port (default `5678`) |
 | Access Key | the key from `hivemind-core add-client` |
-| Crypto Key | the crypto/password key for that client |
+| Password / Crypto Key | the password / crypto key for that client |
 | Language | the utterance language tag (default `en-us`) |
-| Accept self signed | tick if the hub uses a self-signed TLS cert |
+| Accept self signed | tick if the server uses a self-signed TLS cert |
 
-Click **Connect** (it waits up to 10 seconds for the handshake). When the status
-reads *Connected to HiveMind!*, switch to the **Chat** tab, type a message, and
-press **Send**. The assistant's spoken responses appear in the chat log.
+Click **Connect**. When the status reads *Connected to HiveMind!*, switch to the
+**Chat** tab, type a message, and press **Send**. The assistant's spoken
+responses appear in the chat log.
 
-## How it works
+## Documentation
 
-- `hivemind_remi.HiveMindRemi` is a `remi.App` with two tabs, **Connect** and
-  **Chat**.
-- On connect it builds a `HiveMessageBusClient` from the form fields
-  (`key`, `host`, `port`, `crypto_key`, `ssl` inferred from a `wss://` host) and
-  runs it in a background thread, blocking on `connected_event` until the
-  handshake completes or times out.
-- Sending a message emits a `recognizer_loop:utterance` with the chosen
-  language; the app subscribes to `speak` messages and renders them back into
-  the chat view.
+Full docs live in [`docs/`](./docs):
 
-The `ssl` flag is derived from the host scheme, and **Accept self signed** lets
-you connect to a hub with a self-signed certificate during testing.
+- [Installation](./docs/installation.md)
+- [Configuration](./docs/configuration.md): the Connect-tab fields explained
+- [Architecture](./docs/architecture.md): the remi web-GUI design and how it
+  talks to hivemind-core
+- [Dependencies](./docs/dependencies.md): version policy and the 2.x stack
+- [Running tests](./docs/testing.md): the smoke suite and the HiveMind-side
+  end-to-end suite
 
 ## License
 
-Apache 2.0 — see [LICENSE](./LICENSE).
+Apache 2.0. See [LICENSE](./LICENSE).

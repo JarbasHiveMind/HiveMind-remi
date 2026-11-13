@@ -2,13 +2,16 @@ from os.path import join, dirname
 
 import remi
 import remi.gui as gui
-from mycroft_bus_client import Message
+from ovos_bus_client import Message
+from ovos_utils.log import LOG
 
 from hivemind_bus_client import HiveMessageBusClient
 
+from hivemind_remi.version import __version__
+
 
 class HiveMindRemi(remi.App):
-    platform = "HiveMindRemiV0.1"
+    platform = f"HiveMindRemiV{__version__}"
     bus = None
     self_signed = False
 
@@ -16,30 +19,42 @@ class HiveMindRemi(remi.App):
         super().__init__(static_file_path={'pics': join(dirname(__file__), "res")},
                          *args, **kwargs)
 
+    @property
+    def connected(self) -> bool:
+        """True once the websocket is open and the HiveMind handshake completed."""
+        return bool(self.bus
+                    and self.bus.connected_event.is_set()
+                    and self.bus.handshake_event.is_set())
+
     # hivemind
-    def connect(self, access_key, host="ws://127.0.0.1", port=5678, crypto_key=None, self_signed=None):
+    def connect(self, access_key, host="ws://127.0.0.1", port=5678,
+                password=None, crypto_key=None, self_signed=None):
         if self_signed is not None:
             self.self_signed = self_signed
-        if self.bus:
-            self.bus.port = port
-            self.bus.host = host
-            self.bus.crypto_key = crypto_key
-            self.bus.key = access_key
-            self.bus.ssl = host.startswith("wss:")
-        else:
-            # connect to hivemind
-            self.bus = HiveMessageBusClient(key=access_key,
-                                            port=port,
-                                            host=host,
-                                            crypto_key=crypto_key,
-                                            ssl=host.startswith("wss:"),
-                                            useragent=self.platform,
-                                            self_signed=self.self_signed)
 
-            self.bus.run_in_thread()
-            # block until hivemind connects
-            print("Waiting for Hivemind connection")
-            self.bus.connected_event.wait(timeout=10)
+        # The 0.9.x client derives ssl from the host scheme and is backed by a
+        # NodeIdentity, so connection params can't be mutated in place. Tear down
+        # any previous client and build a fresh one on every (re)connect.
+        if self.bus is not None:
+            try:
+                self.bus.close()
+            except Exception as e:
+                LOG.debug(f"error closing previous HiveMind client: {e}")
+            self.bus = None
+
+        port = int(port) if port else 5678
+        self.bus = HiveMessageBusClient(key=access_key,
+                                        password=password,
+                                        crypto_key=crypto_key or None,
+                                        host=host,
+                                        port=port,
+                                        useragent=self.platform,
+                                        self_signed=self.self_signed)
+
+        # connect() runs the client in a background thread and blocks until the
+        # HiveMind handshake completes (or raises on timeout).
+        LOG.info("Waiting for HiveMind connection")
+        self.bus.connect()
 
     # mycroft
     def handle_speak(self, message):
@@ -64,7 +79,7 @@ class HiveMindRemi(remi.App):
 
         self.chat.append(user)
 
-        if not self.bus or not self.bus.connected_event.is_set():
+        if not self.connected:
             self.speak("I am not connected to the HiveMind!")
         else:
             self.bus.emit(Message("recognizer_loop:utterance",
@@ -92,6 +107,10 @@ class HiveMindRemi(remi.App):
         self.key = gui.TextInput(height=30, width=300)
         accessbox.append([gui.Label("Access Key", width="100"), self.key])
 
+        passwordbox = gui.HBox()
+        self.password = gui.TextInput(height=30, width=300)
+        passwordbox.append([gui.Label("Password", width="100"), self.password])
+
         cryptobox = gui.HBox()
         self.crypto = gui.TextInput(height=30, width=300)
         cryptobox.append([gui.Label("Crypto Key", width="100"), self.crypto])
@@ -113,7 +132,7 @@ class HiveMindRemi(remi.App):
         self.cert.onchange.connect(self.self_signed_toggle)
         certbox.append([gui.Label("Accept self signed", width="100"), self.cert])
 
-        form.append([hostbox, portbox, accessbox, cryptobox, langbox, statusbox, certbox])
+        form.append([hostbox, portbox, accessbox, passwordbox, cryptobox, langbox, statusbox, certbox])
         creds_page.append(form)
         return creds_page
 
@@ -166,13 +185,20 @@ class HiveMindRemi(remi.App):
 
     def on_connect_pressed(self, _):
         self.status.set_text("Connecting")
-        self.connect(access_key=self.key.text,
-                     crypto_key=self.crypto.text,
-                     port=self.port.text,
-                     host=self.host.text)
+        try:
+            self.connect(access_key=self.key.text,
+                         password=self.password.text or None,
+                         crypto_key=self.crypto.text,
+                         port=self.port.text,
+                         host=self.host.text)
+        except Exception as e:
+            LOG.error(f"failed to connect to HiveMind: {e}")
+            self.status.set_text(f"Connection failed: {e}")
+            return
 
-        if self.bus and self.bus.connected_event.is_set():
-            print(f"Connected to HiveMind! {'wss' if self.bus.ssl else 'ws'}://{self.bus.host}:{self.bus.port}")
+        if self.connected:
+            scheme = "wss" if self.host.text.startswith("wss:") else "ws"
+            LOG.info(f"Connected to HiveMind! {scheme}://{self.host.text}:{self.port.text}")
             self.status.set_text("Connected to HiveMind!")
             self.clear_chat()
             self.speak("Connected to HiveMind!")
