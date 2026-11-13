@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1a2](https://github.com/JarbasHiveMind/HiveMind-remi/tree/1.0.1a2) (2026-11-13)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-remi/compare/1.0.1a1...1.0.1a2)
+
+**Merged pull requests:**
+
+- ci: build\_tests collects the whole tests/ directory [\#24](https://github.com/JarbasHiveMind/HiveMind-remi/pull/24) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.0.1a1](https://github.com/JarbasHiveMind/HiveMind-remi/tree/1.0.1a1) (2026-09-01)
 
 [Full Changelog](https://github.com/JarbasHiveMind/HiveMind-remi/compare/1.0.0a3...1.0.1a1)
