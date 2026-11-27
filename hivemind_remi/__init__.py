@@ -6,6 +6,7 @@ from ovos_bus_client import Message
 from ovos_utils.log import LOG
 
 from hivemind_bus_client import HiveMessageBusClient
+from hivemind_bus_client.identity import NodeIdentity
 
 from hivemind_remi.version import __version__
 
@@ -49,7 +50,8 @@ class HiveMindRemi(remi.App):
                                         host=host,
                                         port=port,
                                         useragent=self.platform,
-                                        self_signed=self.self_signed)
+                                        self_signed=self.self_signed,
+                                        identity=NodeIdentity(app_name="remi"))
 
         # connect() runs the client in a background thread and blocks until the
         # HiveMind handshake completes (or raises on timeout).
