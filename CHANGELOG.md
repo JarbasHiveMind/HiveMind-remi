@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2a1](https://github.com/JarbasHiveMind/HiveMind-remi/tree/1.0.2a1) (2026-11-27)
+
+[Full Changelog](https://github.com/JarbasHiveMind/HiveMind-remi/compare/1.0.1a2...1.0.2a1)
+
+**Merged pull requests:**
+
+- fix: the app connects with its own remi identity [\#27](https://github.com/JarbasHiveMind/HiveMind-remi/pull/27) ([openvoiceos-bot](https://github.com/openvoiceos-bot))
+
 ## [1.0.1a2](https://github.com/JarbasHiveMind/HiveMind-remi/tree/1.0.1a2) (2026-11-13)
 
 [Full Changelog](https://github.com/JarbasHiveMind/HiveMind-remi/compare/1.0.1a1...1.0.1a2)
