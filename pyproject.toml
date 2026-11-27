@@ -19,7 +19,7 @@ dependencies = [
     # the host scheme). It requires ovos-bus-client>=2.9.1a1, so the floor is
     # the prerelease pinned as a *minimum* — pip resolves it with NO --pre
     # per repo policy.
-    "hivemind-bus-client>=1.0.16a1",
+    "hivemind-bus-client>=1.2.1a1",
     "ovos-bus-client>=2.9.1a1,<3.0.0",
     "remi",
     "ovos-utils>=0.13.15a1",
